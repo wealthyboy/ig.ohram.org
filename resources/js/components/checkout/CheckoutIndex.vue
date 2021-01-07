@@ -277,7 +277,7 @@ export default {
     },
     props:{
        csrf: Object,
-       payment: Object
+       payment: Array
     },
     data(){
         return {

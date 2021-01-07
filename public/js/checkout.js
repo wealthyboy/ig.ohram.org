@@ -2250,7 +2250,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   props: {
     csrf: Object,
-    payment: Object
+    payment: Array
   },
   data: function data() {
     return {
