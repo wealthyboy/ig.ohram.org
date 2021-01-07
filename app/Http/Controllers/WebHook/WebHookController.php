@@ -105,5 +105,10 @@ class WebHookController extends Controller
         
     }
 
+
+    public function gitHub(){
+        $output =  shell_exec('sh /home/forge/ig.ohram.org/deploy.sh');
+        Log::info($output);
+    }
    
 }
