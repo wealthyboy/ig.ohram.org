@@ -2501,13 +2501,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     };
   },
-  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     errors: 'errors'
-  })), {}, {
-    logo: function logo() {
-      return '/images/logo/' + this.$root.settings.store_logo;
-    }
-  }),
+  })),
   mounted: function mounted() {
     // this.$store.commit('setFormErrors', null)
     console.log(true);
@@ -4787,6 +4783,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -42636,7 +42633,11 @@ var render = function() {
             _c("div", { staticClass: "modal-header" }, [
               _c("div", { staticClass: "modal-title" }, [
                 _c("img", {
-                  attrs: { width: "100", height: "100", src: _vm.logo }
+                  attrs: {
+                    width: "100",
+                    height: "100",
+                    src: _vm.$root.settings.store_logo
+                  }
                 })
               ]),
               _vm._v(" "),
@@ -46031,7 +46032,7 @@ var render = function() {
         },
         [
           _c("i", { staticClass: "icon-shopping-cart" }),
-          _vm._v("Cart\n            "),
+          _vm._v(" "),
           _c("span", { staticClass: "cart-count badge-circle" }, [
             _vm._v(_vm._s(_vm.cartItemCount))
           ])
@@ -46055,9 +46056,11 @@ var render = function() {
         [
           _c("i", { staticClass: "icon-shopping-cart" }),
           _vm._v(" Cart\n            "),
-          _c("span", { staticClass: "cart-count badge-circle " }, [
-            _vm._v(_vm._s(_vm.cartItemCount))
-          ])
+          _c(
+            "span",
+            { staticClass: "cart-count badge-circle color--primary" },
+            [_vm._v(_vm._s(_vm.cartItemCount))]
+          )
         ]
       ),
       _vm._v(" "),
@@ -47856,9 +47859,9 @@ var render = function() {
                       : _vm._e(),
                     _vm._v(" "),
                     !_vm.loading && !_vm.reviews.length
-                      ? _c("div", { staticClass: "text-center bold" }, [
+                      ? _c("div", [
                           _vm._v(
-                            "\n                                    No Reviews \n                                "
+                            "\n                                     No Reviews \n                                "
                           )
                         ])
                       : _vm._e()
@@ -69892,9 +69895,12 @@ var updateCart = function updateCart(_ref3, _ref4) {
 };
 var getCart = function getCart(_ref5) {
   var commit = _ref5.commit;
+  commit('Loading', true);
   return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/cart').then(function (response) {
     commit('setCart', response.data);
     commit('setCartMeta', response.data.meta);
+    document.getElementById('js-loading').style.display = 'none';
+    commit('Loading', false);
     return Promise.resolve();
   })["catch"](function () {});
 };
@@ -70621,8 +70627,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Applications/XAMPP/xamppfiles/htdocs/ohramnew/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Applications/XAMPP/xamppfiles/htdocs/ohramnew/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Applications/XAMPP/xamppfiles/htdocs/ig.ohram/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Applications/XAMPP/xamppfiles/htdocs/ig.ohram/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

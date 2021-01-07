@@ -384,13 +384,11 @@ export default {
             var amount =  this.amount * 100;
             var mac = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
             var site_redirect_url = "https://ig.ohram.org/checkout/confirm"
-
             var a = this.getRandomInt(12345678,10000000000);
             var b = 'JB-';
             var c = "-NWEB";
             var reqRef = b + a + c;
             var shipping_id = this.shipping_id
-
             var signatureCipher = reqRef + product_id + pay_item_id + amount + site_redirect_url  + mac;
             var iswPay = new IswPay({
                 postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
@@ -405,11 +403,21 @@ export default {
                 hash: Sha512.hash(signatureCipher),
                 onComplete : function (paymentResponse){
                     console.log(paymentResponse)
+                    let url = "https://sandbox.interswitchng.com/webpay/api/v1/gettransaction.json?productId="+product_id+"&transactionreference="+reqRef+"&amount="+amount
+                    axios.get(url).then((response) => {
+                        console.log(response)
+                    }).catch((error) => { 
+                        console.log(error)
+                    })
+
                     if (paymentResponse.resp == '00'){
                         location.href= site_redirect_url+"?txref="+paymentResponse.txnref +"&rr="+paymentResponse.retRef+"&ship_id="+shipping_id+"&desc="+paymentResponse.desc+"&amount="+paymentResponse.apprAmt
+                    } else {
+                        context.order_text =  'Place Order'
+                       $(".checkout-overlay").removeClass("d-none")
+
                     }
 
-                    context.order_text =  'Place Order'
                 }
             });
         },
