@@ -2387,7 +2387,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           var url = "https://sandbox.interswitchng.com/webpay/api/v1/gettransaction.json?productId=" + product_id + "&transactionreference=" + reqRef + "&amount=" + amount;
           axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
             headers: {
-              'Hash': Sha512.hash(signatureCipher)
+              Hash: Sha512.hash(signatureCipher)
             }
           }).then(function (response) {
             console.log(response);
