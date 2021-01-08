@@ -22088,7 +22088,7 @@ var render = function() {
                         staticClass: "btn btn--primary space-t--2",
                         attrs: { href: "" }
                       },
-                      [_vm._v("Retry")]
+                      [_vm._v("Try again")]
                     )
                   ])
                 ])

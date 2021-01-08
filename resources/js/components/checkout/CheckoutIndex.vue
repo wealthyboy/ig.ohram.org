@@ -12,7 +12,7 @@
                                 <p class="large text-danger bold">{{ failedStatus.ResponseDescription }}.</p>
                                 <p class="large"></p>
                                 
-                                <a href="" class="btn btn--primary space-t--2">Retry</a>
+                                <a href="" class="btn btn--primary space-t--2">Try again</a>
                             </div>
                         </div>
 

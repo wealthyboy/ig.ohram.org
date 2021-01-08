@@ -97,7 +97,19 @@ class TransactionController extends Controller
 			{  
 				// Show me the result
 				$json = json_decode($data, TRUE);
-				curl_close($ch);    //END CURL SESSION///////////////////////////////
+                curl_close($ch);    //END CURL SESSION///////////////////////////////
+                $cookie = \Cookie::get('cart');
+
+
+		       if ($cookie !== null) {
+                $transaction_log = TransactionLog::where('token',$cookie)->first();
+                if(null != $transaction_log){
+                    $transaction_log->transaction_reference = $json["MerchantReference"];
+                    $transaction_log->approved_amount = $json["Amount"] / 100;
+                    $transaction_log->response_description = $json["ResponseDescription"];
+                    $transaction_log->status = 'Failed';
+                    $transaction_log->save();
+                }
 			    return response()->json(['status' =>$json]);
 			}
 
