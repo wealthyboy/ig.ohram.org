@@ -1,7 +1,29 @@
 
 <template>
     <div>
-        <div  v-if="!pageIsLoading" class="container   mt-1">
+        <div v-if="failedStatus" class="page-contaiter">
+            <!--Content-->
+            <section class="sec-padding--lg vh--100">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                            <div class="error-page text-center">
+                                <h1></h1>
+                                <p class="large">{{ failedStatus }}Your order has been received .</p>
+                                <p class="large"></p>
+                                
+                                <a href="/" class="btn btn--primary space-t--2">Continue</a>
+                                <a href="/orders" class="btn btn--primary space-t--2">View order history</a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            <!--End Content-->
+        </div>
+        <div  v-if="!pageIsLoading  && !failedStatus" class="container   mt-1">
             <div  class="row d-none justify-content-center">
                 <ul class="checkout-progress-bar">
                     <li :class="{'active': !addresses.length}">
@@ -107,15 +129,6 @@
                                                     </optgroup>
                                                 </select>
                                             </div>
-                                            <input name="product_id" type="hidden" :value="payment.product_id" />
-                                            <input name="cust_id" type="hidden" :value="payment.cust_id"/>
-                                            <input name="cust_name" type="hidden" :value="payment.full_name" />
-                                            <input name="pay_item_id" type="hidden" :value="payment.pay_item_id" />
-                                            <input name="amount" type="hidden" :value="amount" />
-                                            <input name="currency" type="hidden" :value="566" />
-                                            <input name="site_redirect_url" type="hidden" :value="payment.site_redirect_url" />
-                                            <input name="txn_ref" type="hidden" :value="payment.txn_ref" />
-                                            <input name="hash" type="hidden" id="hash" :value="payment.hash" />
                                            
                                             <input type="hidden" :value="csrf.csrf" name="_token" />
                                             <input type="hidden" :value="shipping_id" name="ship_id" />
@@ -184,8 +197,6 @@
                            
                         </div>
                     </div>
-
-                
                 </div>
                 <div class="col-5">
                     <div class="col-md-12 d-none d-lg-block  mb-3">
@@ -298,6 +309,8 @@ export default {
       payment_method: null,
       loading: false,
       pageIsLoading: true,
+      paymentIsProcess: false,
+      failedStatus: null,
     };
   },
   computed: {
@@ -417,27 +430,6 @@ export default {
         hash: Sha512.hash(signatureCipher),
         onComplete: function (paymentResponse) {
           console.log(paymentResponse);
-          let url =
-            "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?productId=" +
-            product_id +
-            "&transactionreference=" +
-            reqRef +
-            "&amount=" +
-            amount;
-          axios
-            .post("/transaction/status", {
-              productId: product_id,
-              reqRef: reqRef,
-              amount: amount,
-              hash: Sha512.hash(signatureCipher),
-            })
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-
           if (paymentResponse.resp == "00") {
             location.href =
               site_redirect_url +
@@ -453,7 +445,20 @@ export default {
               paymentResponse.apprAmt;
           } else {
             context.order_text = "Place Order";
-            $(".checkout-overlay").removeClass("d-none");
+            axios
+              .post("/transaction/status", {
+                productId: product_id,
+                reqRef: reqRef,
+                amount: amount,
+                hash: Sha512.hash(signatureCipher),
+              })
+              .then((response) => {
+                context.failedStatus = response.data.status;
+                $(".checkout-overlay").addClass("d-none");
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           }
         },
       });

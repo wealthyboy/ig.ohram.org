@@ -2237,6 +2237,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2272,7 +2283,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       token: Window.csrf,
       payment_method: null,
       loading: false,
-      pageIsLoading: true
+      pageIsLoading: true,
+      paymentIsProcess: false,
+      failedStatus: null
     };
   },
   computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapGetters"])({
@@ -2384,23 +2397,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         hash: Sha512.hash(signatureCipher),
         onComplete: function onComplete(paymentResponse) {
           console.log(paymentResponse);
-          var url = "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?productId=" + product_id + "&transactionreference=" + reqRef + "&amount=" + amount;
-          axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/transaction/status", {
-            productId: product_id,
-            reqRef: reqRef,
-            amount: amount,
-            hash: Sha512.hash(signatureCipher)
-          }).then(function (response) {
-            console.log(response);
-          })["catch"](function (error) {
-            console.log(error);
-          });
 
           if (paymentResponse.resp == "00") {
             location.href = site_redirect_url + "?txref=" + paymentResponse.txnref + "&rr=" + paymentResponse.retRef + "&ship_id=" + shipping_id + "&desc=" + paymentResponse.desc + "&amount=" + paymentResponse.apprAmt;
           } else {
             context.order_text = "Place Order";
-            $(".checkout-overlay").removeClass("d-none");
+            axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/transaction/status", {
+              productId: product_id,
+              reqRef: reqRef,
+              amount: amount,
+              hash: Sha512.hash(signatureCipher)
+            }).then(function (response) {
+              context.failedStatus = response.data.status;
+              $(".checkout-overlay").addClass("d-none");
+            })["catch"](function (error) {
+              console.log(error);
+            });
           }
         }
       });
@@ -22057,7 +22069,50 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    !_vm.pageIsLoading
+    _vm.failedStatus
+      ? _c("div", { staticClass: "page-contaiter" }, [
+          _c("section", { staticClass: "sec-padding--lg vh--100" }, [
+            _c("div", { staticClass: "container" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-8 offset-md-2" }, [
+                  _c("div", { staticClass: "error-page text-center" }, [
+                    _c("h1"),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "large" }, [
+                      _vm._v(
+                        _vm._s(_vm.failedStatus) +
+                          "Your order has been received ."
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "large" }),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn--primary space-t--2",
+                        attrs: { href: "/" }
+                      },
+                      [_vm._v("Continue")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn--primary space-t--2",
+                        attrs: { href: "/orders" }
+                      },
+                      [_vm._v("View order history")]
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.pageIsLoading && !_vm.failedStatus
       ? _c("div", { staticClass: "container   mt-1" }, [
           _c("div", { staticClass: "row d-none justify-content-center" }, [
             _c("ul", { staticClass: "checkout-progress-bar" }, [
@@ -22439,63 +22494,6 @@ var render = function() {
                                       )
                                     ])
                                   : _vm._e(),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: { name: "product_id", type: "hidden" },
-                                  domProps: { value: _vm.payment.product_id }
-                                }),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: { name: "cust_id", type: "hidden" },
-                                  domProps: { value: _vm.payment.cust_id }
-                                }),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: { name: "cust_name", type: "hidden" },
-                                  domProps: { value: _vm.payment.full_name }
-                                }),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: {
-                                    name: "pay_item_id",
-                                    type: "hidden"
-                                  },
-                                  domProps: { value: _vm.payment.pay_item_id }
-                                }),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: { name: "amount", type: "hidden" },
-                                  domProps: { value: _vm.amount }
-                                }),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: { name: "currency", type: "hidden" },
-                                  domProps: { value: 566 }
-                                }),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: {
-                                    name: "site_redirect_url",
-                                    type: "hidden"
-                                  },
-                                  domProps: {
-                                    value: _vm.payment.site_redirect_url
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: { name: "txn_ref", type: "hidden" },
-                                  domProps: { value: _vm.payment.txn_ref }
-                                }),
-                                _vm._v(" "),
-                                _c("input", {
-                                  attrs: {
-                                    name: "hash",
-                                    type: "hidden",
-                                    id: "hash"
-                                  },
-                                  domProps: { value: _vm.payment.hash }
-                                }),
                                 _vm._v(" "),
                                 _c("input", {
                                   attrs: { type: "hidden", name: "_token" },

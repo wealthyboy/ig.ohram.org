@@ -2,11 +2,9 @@
  
 @section('content')
 <div class="checkout-overlay d-none">
-    <div class="text fa-2x">Please wait while we complete your transaction</div>
+    <div class="text fa-2x">Please wait while we process your transaction</div>
 </div>
 <section class="bg--gray">
-
-
 
     <div id="full-bg"  class="full-bg">
         <div class="signup--middle">
