@@ -2254,13 +2254,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
-      coupon: '',
+      coupon: "",
       locations: [],
       shipping_id: null,
-      shipping_price: '',
+      shipping_price: "",
       email: "jacob.atam@gmail.com",
       amount: 0,
-      order_text: 'Place Order',
+      order_text: "Place Order",
       payment_is_processing: false,
       voucher: [],
       error: null,
@@ -2276,13 +2276,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapGetters"])({
-    carts: 'carts',
-    meta: 'meta',
+    carts: "carts",
+    meta: "meta",
     addresses: "addresses",
     default_shipping: "default_shipping"
   })), {}, {
     shippingIsFree: function shippingIsFree() {
-      return this.$root.settings.shipping_is_free == 0 ? 'Shipping is based on your location' : this.meta.currency + '0.00';
+      return this.$root.settings.shipping_is_free == 0 ? "Shipping is based on your location" : this.meta.currency + "0.00";
     },
     finalPrice: function finalPrice() {
       var p = this.amount || this.meta.sub_total;
@@ -2301,7 +2301,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.getAddresses({
       context: this
     }).then(function () {
-      document.getElementById("full-bg").style.display = 'none';
+      document.getElementById("full-bg").style.display = "none";
       _this.pageIsLoading = false;
     });
     this.logTransaction();
@@ -2313,17 +2313,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
     logTransaction: function logTransaction() {
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/log/transaction').then(function (response) {})["catch"](function (error) {});
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/log/transaction").then(function (response) {})["catch"](function (error) {});
     },
     loadScript: function loadScript(callback) {
-      var script = document.createElement('script');
-      script.src = 'https://sandbox.interswitchng.com/collections/public/webpay.js';
-      document.getElementsByTagName('head')[0].appendChild(script);
+      var script = document.createElement("script");
+      script.src = "https://sandbox.interswitchng.com/collections/public/webpay.js";
+      document.getElementsByTagName("head")[0].appendChild(script);
 
       if (script.readyState) {
         // IE
         script.onreadystatechange = function () {
-          if (script.readyState === 'loaded' || script.readyState === 'complete') {
+          if (script.readyState === "loaded" || script.readyState === "complete") {
             script.onreadystatechange = null;
             callback();
           }
@@ -2338,7 +2338,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     payWithPaystack: function payWithPaystack() {
       var context = this;
       var cartIds = [];
-      document.getElementById("full-bg").style.display = 'none';
+      document.getElementById("full-bg").style.display = "none";
       this.carts.forEach(function (cart, key) {
         cartIds.push(cart.id);
       });
@@ -2355,10 +2355,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else {//this.amount =  this.meta.sub_total
       }
 
-      var form = document.getElementById('checkout-form-2');
-      this.order_text = 'Payment is processing. Please wait....';
+      var form = document.getElementById("checkout-form-2");
+      this.order_text = "Payment is processing. Please wait....";
       this.payment_is_processing = true;
-      this.payment_method = 'card'; //form.submit()
+      this.payment_method = "card"; //form.submit()
 
       var product_id = 1076;
       var pay_item_id = 101;
@@ -2366,7 +2366,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var mac = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
       var site_redirect_url = "https://ig.ohram.org/checkout/confirm";
       var a = this.getRandomInt(12345678, 10000000000);
-      var b = 'JB-';
+      var b = "JB-";
       var c = "-NWEB";
       var reqRef = b + a + c;
       var shipping_id = this.shipping_id;
@@ -2385,20 +2385,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         onComplete: function onComplete(paymentResponse) {
           console.log(paymentResponse);
           var url = "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?productId=" + product_id + "&transactionreference=" + reqRef + "&amount=" + amount;
-          axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
-            headers: {
-              'Hash': Sha512.hash(signatureCipher)
-            }
+          axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/transaction/status", {
+            productId: product_id,
+            reqRef: reqRef,
+            amount: amount,
+            hash: Sha512.hash(signatureCipher)
           }).then(function (response) {
             console.log(response);
           })["catch"](function (error) {
             console.log(error);
           });
 
-          if (paymentResponse.resp == '00') {
+          if (paymentResponse.resp == "00") {
             location.href = site_redirect_url + "?txref=" + paymentResponse.txnref + "&rr=" + paymentResponse.retRef + "&ship_id=" + shipping_id + "&desc=" + paymentResponse.desc + "&amount=" + paymentResponse.apprAmt;
           } else {
-            context.order_text = 'Place Order';
+            context.order_text = "Place Order";
             $(".checkout-overlay").removeClass("d-none");
           }
         }
@@ -2415,19 +2416,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return false;
       }
 
-      this.payment_method = 'admin';
-      this.order_text = 'Please wait. We are almost done......';
-      var form = document.getElementById('checkout-form-2');
+      this.payment_method = "admin";
+      this.order_text = "Please wait. We are almost done......";
+      var form = document.getElementById("checkout-form-2");
       form.submit();
     },
     addShippingPrice: function addShippingPrice(evt) {
-      if (evt.target.value == '') {
+      if (evt.target.value == "") {
         return;
       }
 
-      this.error = '';
+      this.error = "";
       this.shipping_id = evt.target.selectedOptions[0].dataset.id;
-      this.shipping_price = evt.target.value; //check if a voucher was applied 
+      this.shipping_price = evt.target.value; //check if a voucher was applied
 
       if (this.voucher.length) {
         this.amount = parseInt(evt.target.value) + parseInt(this.voucher[0].sub_total);
@@ -2446,9 +2447,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.updateCartTotal(obj);
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapActions"])({
-    getCart: 'getCart',
-    applyVoucher: 'applyVoucher',
-    updateCartMeta: 'updateCartMeta',
+    getCart: "getCart",
+    applyVoucher: "applyVoucher",
+    updateCartMeta: "updateCartMeta",
     getAddresses: "getAddresses"
   })), {}, {
     applyCoupon: function applyCoupon() {
@@ -2464,11 +2465,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.coupon_error = null;
       this.submiting = true;
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/checkout/coupon', {
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/checkout/coupon", {
         coupon: this.coupon
       }).then(function (response) {
         _this2.submiting = false;
-        _this2.coupon = '';
+        _this2.coupon = "";
 
         _this2.voucher.push(response.data);
 
@@ -2489,13 +2490,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     checkout: function checkout() {
       var _this3 = this;
 
-      this.order_text = 'Please wait. We are almost done......';
+      this.order_text = "Please wait. We are almost done......";
       this.checkingout = true;
       this.coupon_error = null;
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/checkout/confirm', {
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/checkout/confirm", {
         shipping_id: Window.CartMeta.shipping_id,
-        payment_type: this.meta.isAdmin ? 'admin' : 'card',
-        admin: this.meta.isAdmin ? 'admin' : 'online',
+        payment_type: this.meta.isAdmin ? "admin" : "card",
+        admin: this.meta.isAdmin ? "admin" : "online",
         pending: false
       }).then(function (response) {
         if (response.data == 1) {
@@ -7401,7 +7402,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.fa-20 {\n      font-size: 20px;\n}\n.fa-28 {\n      font-size: 28px;\n}\n\n  /* Position text in the middle of the page/image */\n.bg-text {\n  background-color: #36c2ad !important ;/* Black w/opacity/see-through */\n  color: white;\n  font-weight: 700;\n  font-size: 12px;\n  border: 2px solid #f1f1f1;\n  position: fixed; /* Stay fixed */\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 2;\n  width: auto;\n  padding: 20px;\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, "\n.fa-20 {\n  font-size: 20px;\n}\n.fa-28 {\n  font-size: 28px;\n}\n\n/* Position text in the middle of the page/image */\n.bg-text {\n  background-color: #36c2ad !important ; /* Black w/opacity/see-through */\n  color: white;\n  font-weight: 700;\n  font-size: 12px;\n  border: 2px solid #f1f1f1;\n  position: fixed; /* Stay fixed */\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 2;\n  width: auto;\n  padding: 20px;\n  text-align: center;\n}\n", ""]);
 
 // exports
 

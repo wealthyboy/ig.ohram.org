@@ -261,285 +261,326 @@
 
 </template>
 <script>
-import  ShipAddress from './ShipAddress'
-import  message from '../message/index'
-import  axios from 'axios'
-import  { mapGetters,mapActions } from 'vuex'
-import  ErrorMessage from '../messages/components/Error'
-
+import ShipAddress from "./ShipAddress";
+import message from "../message/index";
+import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
+import ErrorMessage from "../messages/components/Error";
 
 export default {
+  components: {
+    ShipAddress,
+    message,
+    ErrorMessage,
+  },
+  props: {
+    csrf: Object,
+    payment: Array,
+  },
+  data() {
+    return {
+      coupon: "",
+      locations: [],
+      shipping_id: null,
+      shipping_price: "",
+      email: "jacob.atam@gmail.com",
+      amount: 0,
+      order_text: "Place Order",
+      payment_is_processing: false,
+      voucher: [],
+      error: null,
+      showForm: false,
+      scriptLoaded: null,
+      submiting: false,
+      checkingout: false,
+      coupon_error: null,
+      token: Window.csrf,
+      payment_method: null,
+      loading: false,
+      pageIsLoading: true,
+    };
+  },
+  computed: {
+    ...mapGetters({
+      carts: "carts",
+      meta: "meta",
+      addresses: "addresses",
+      default_shipping: "default_shipping",
+    }),
+    shippingIsFree() {
+      return this.$root.settings.shipping_is_free == 0
+        ? "Shipping is based on your location"
+        : this.meta.currency + "0.00";
+    },
+    finalPrice() {
+      let p = this.amount || this.meta.sub_total;
+      return p * 100;
+    },
+  },
+  created() {
+    this.scriptLoaded = new Promise((resolve) => {
+      this.loadScript(() => {
+        resolve();
+      });
+    });
+    this.getCart();
+    this.getAddresses({ context: this }).then(() => {
+      document.getElementById("full-bg").style.display = "none";
+      this.pageIsLoading = false;
+    });
+    this.logTransaction();
+  },
+  methods: {
+    ...mapActions({
+      getCart: "getCart",
+    }),
+    getRandomInt: function (min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
+    logTransaction: function () {
+      axios
+        .post("/log/transaction")
+        .then((response) => {})
+        .catch((error) => {});
+    },
+    loadScript(callback) {
+      const script = document.createElement("script");
+      script.src =
+        "https://sandbox.interswitchng.com/collections/public/webpay.js";
+      document.getElementsByTagName("head")[0].appendChild(script);
+      if (script.readyState) {
+        // IE
+        script.onreadystatechange = () => {
+          if (
+            script.readyState === "loaded" ||
+            script.readyState === "complete"
+          ) {
+            script.onreadystatechange = null;
+            callback();
+          }
+        };
+      } else {
+        // Others
+        script.onload = () => {
+          callback();
+        };
+      }
+    },
+    payWithPaystack: function () {
+      let context = this;
+      var cartIds = [];
+      document.getElementById("full-bg").style.display = "none";
+      this.carts.forEach(function (cart, key) {
+        cartIds.push(cart.id);
+      });
+      $(".checkout-overlay").removeClass("d-none");
+      if (!this.addresses.length) {
+        this.error = "You need to save your address before placing your order";
+        return false;
+      }
 
-    components: {
-        ShipAddress,
-        message,
-        ErrorMessage,
-    },
-    props:{
-       csrf: Object,
-       payment: Array
-    },
-    data(){
-        return {
-           coupon: '',
-           locations: [],
-           shipping_id: null,
-           shipping_price:'',
-           email: "jacob.atam@gmail.com", 
-           amount: 0,
-           order_text: 'Place Order',
-           payment_is_processing: false,
-           voucher: [],
-           error: null,
-           showForm: false,
-           scriptLoaded: null,
-           submiting:false,
-           checkingout:false,
-           coupon_error: null,
-           token: Window.csrf,
-           payment_method: null,
-           loading: false,
-           pageIsLoading: true
-        }
-    },
-    computed: {
-      ...mapGetters({
-            carts: 'carts',
-            meta:  'meta',
-            addresses: "addresses",
-            default_shipping: "default_shipping",
-        }), 
-        shippingIsFree(){
-          return  this.$root.settings.shipping_is_free == 0 ? 'Shipping is based on your location' : this.meta.currency+'0.00'
-        } ,
-        finalPrice(){
-            let p = this.amount ||  this.meta.sub_total;
-            return p * 100
-        }   
-    },
-    created() {
-        this.scriptLoaded = new Promise((resolve) => {
-            this.loadScript(() => {
-                resolve()
+      if (this.$root.settings.shipping_is_free == 0 && !this.shipping_price) {
+        this.error = "Please select your shipping method";
+        return false;
+      } else {
+        //this.amount =  this.meta.sub_total
+      }
+
+      let form = document.getElementById("checkout-form-2");
+      this.order_text = "Payment is processing. Please wait....";
+      this.payment_is_processing = true;
+      this.payment_method = "card";
+      //form.submit()
+      var product_id = 1076;
+      var pay_item_id = 101;
+      var amount = this.amount * 100;
+      var mac =
+        "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
+      var site_redirect_url = "https://ig.ohram.org/checkout/confirm";
+      var a = this.getRandomInt(12345678, 10000000000);
+      var b = "JB-";
+      var c = "-NWEB";
+      var reqRef = b + a + c;
+      var shipping_id = this.shipping_id;
+      var signatureCipher =
+        reqRef + product_id + pay_item_id + amount + site_redirect_url + mac;
+      var iswPay = new IswPay({
+        postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
+        amount: amount,
+        productId: product_id,
+        transRef: reqRef,
+        siteName: "OHRAM COMPANY INTERNATIONAL",
+        itemId: pay_item_id,
+        customerId: a,
+        siteRedirectUrl: site_redirect_url,
+        currency: "NGN",
+        hash: Sha512.hash(signatureCipher),
+        onComplete: function (paymentResponse) {
+          console.log(paymentResponse);
+          let url =
+            "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?productId=" +
+            product_id +
+            "&transactionreference=" +
+            reqRef +
+            "&amount=" +
+            amount;
+          axios
+            .get("/transaction/status", {
+              productId: product_id,
+              reqRef: reqRef,
+              amount: amount,
+              hash: Sha512.hash(signatureCipher),
             })
-        })
-        this.getCart()
-        this.getAddresses({ context: this  }).then(() => {  document.getElementById("full-bg").style.display = 'none'; this.pageIsLoading = false;   })
-        this.logTransaction()
-    },
-    methods: {
-        ...mapActions({
-           getCart: "getCart"
-        }),
-         getRandomInt: function(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        },
-        logTransaction: function(){
-            axios.post('/log/transaction').then((response) => {}).catch((error) => { })
-        },
-        loadScript(callback) {
-            const script = document.createElement('script')
-            script.src = 'https://sandbox.interswitchng.com/collections/public/webpay.js'
-            document.getElementsByTagName('head')[0].appendChild(script)
-            if (script.readyState) {  // IE
-                script.onreadystatechange = () => {
-                    if (script.readyState === 'loaded' || script.readyState === 'complete') {
-                        script.onreadystatechange = null
-                        callback()
-                    }
-                }
-            } else {  // Others
-                script.onload = () => {
-                    callback()
-                }
-            }
-        },
-        payWithPaystack: function(){
-            let context = this
-            var cartIds = [];
-            document.getElementById("full-bg").style.display = 'none';
-            this.carts.forEach(function(cart,key){
-                cartIds.push(cart.id)
-            }) 
-            $(".checkout-overlay").removeClass("d-none")
-            if ( !this.addresses.length ){
-                this.error = "You need to save your address before placing your order"
-                return false;
-            }
-
-            if ( this.$root.settings.shipping_is_free == 0   && !this.shipping_price ){
-                this.error = "Please select your shipping method"
-                return false;
-            } else {
-               //this.amount =  this.meta.sub_total
-            }
-
-            let form = document.getElementById('checkout-form-2')
-            this.order_text =  'Payment is processing. Please wait....'
-            this.payment_is_processing =true
-            this.payment_method ='card'
-            //form.submit()
-            var product_id = 1076;
-            var pay_item_id = 101;
-            var amount =  this.amount * 100;
-            var mac = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
-            var site_redirect_url = "https://ig.ohram.org/checkout/confirm"
-            var a = this.getRandomInt(12345678,10000000000);
-            var b = 'JB-';
-            var c = "-NWEB";
-            var reqRef = b + a + c;
-            var shipping_id = this.shipping_id
-            var signatureCipher = reqRef + product_id + pay_item_id + amount + site_redirect_url  + mac;
-            var iswPay = new IswPay({
-                postUrl: "https://sandbox.interswitchng.com/collections/w/pay",
-                amount: amount,
-                productId: product_id,
-                transRef: reqRef,
-                siteName: "OHRAM COMPANY INTERNATIONAL",
-                itemId: pay_item_id,
-                customerId: a,
-                siteRedirectUrl: site_redirect_url,
-                currency: "NGN",
-                hash: Sha512.hash(signatureCipher),
-                onComplete : function (paymentResponse){
-                    console.log(paymentResponse)
-                    let url = "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?productId="+product_id+"&transactionreference="+reqRef+"&amount="+amount
-                    axios.get(url,{
-                        headers: {
-                           'Hash': Sha512.hash(signatureCipher)
-                        }
-                    }).then((response) => {
-                        console.log(response)
-                    }).catch((error) => { 
-                        console.log(error)
-                    })
-
-                    if (paymentResponse.resp == '00'){
-                        location.href= site_redirect_url+"?txref="+paymentResponse.txnref +"&rr="+paymentResponse.retRef+"&ship_id="+shipping_id+"&desc="+paymentResponse.desc+"&amount="+paymentResponse.apprAmt
-                    } else {
-                        context.order_text =  'Place Order'
-                       $(".checkout-overlay").removeClass("d-none")
-
-                    }
-
-                }
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.log(error);
             });
-        },
-        payAsAdmin: function(){
-            if (!this.addresses.length){
-                this.error = "You need to save your address before placing your order"
-                return false;
-            }
 
-            if (this.$root.settings.shipping_is_free == 0 && !this.shipping_price){
-                this.error = "Please select your shipping method"
-                return false;
-            }
-            this.payment_method ='admin'
-
-            this.order_text =  'Please wait. We are almost done......'
-            let form = document.getElementById('checkout-form-2')
-            form.submit()
-
+          if (paymentResponse.resp == "00") {
+            location.href =
+              site_redirect_url +
+              "?txref=" +
+              paymentResponse.txnref +
+              "&rr=" +
+              paymentResponse.retRef +
+              "&ship_id=" +
+              shipping_id +
+              "&desc=" +
+              paymentResponse.desc +
+              "&amount=" +
+              paymentResponse.apprAmt;
+          } else {
+            context.order_text = "Place Order";
+            $(".checkout-overlay").removeClass("d-none");
+          }
         },
-        addShippingPrice:  function(evt){
-            if (evt.target.value  == ''){
-               return;
-            }
-            this.error = ''
-            this.shipping_id  = evt.target.selectedOptions[0].dataset.id;
-            this.shipping_price =  evt.target.value
-            //check if a voucher was applied 
-            if ( this.voucher.length ){
-                this.amount = parseInt( evt.target.value ) + parseInt(this.voucher[0].sub_total);
-            } else {
-                this.amount = parseInt( evt.target.value ) + parseInt(this.meta.sub_total);
-            }
-            let obj = {
-                sub_total: this.meta.sub_total,
-                currency: this.meta.currency,
-                user: this.meta.user,
-                shipping_id: this.shipping_id,
-                isAdmin: this.meta.isAdmin
-            }
-            Window.CartMeta=obj
-            this.updateCartTotal(obj)
-        },
-        ...mapActions({
-            getCart:'getCart',
-            applyVoucher: 'applyVoucher',
-            updateCartMeta:'updateCartMeta',
-            getAddresses: "getAddresses",
-        }), 
-        applyCoupon: function(){
-            if (!this.coupon){
-                this.coupon_error = "Enter a coupon code"
-                setTimeout(() => {
-                   this.error = null
-                }, 2000);
-                return;
-            }
-            this.coupon_error = null;
-            this.submiting =true
-            axios.post('/checkout/coupon',{
-                coupon:this.coupon,
-            }).then((response) => {
-                this.submiting =false
-                this.coupon = ''
-                this.voucher.push(response.data)
-                if (this.shipping_price){
-                    this.amount =  parseInt(this.shipping_price) + parseInt(response.data.sub_total);
-                } else{
-                    this.amount =  parseInt(response.data.sub_total);
-                }
-            }).catch((error) => { 
-                this.submiting =false
-                this.coupon_error = error.response.data.error 
-                if ( error.response.status){
-                    this.submiting =false
-                } 
-            })
-        },
-        checkout: function(){
-            this.order_text =  'Please wait. We are almost done......'
-            this.checkingout = true
-            this.coupon_error = null;
+      });
+    },
+    payAsAdmin: function () {
+      if (!this.addresses.length) {
+        this.error = "You need to save your address before placing your order";
+        return false;
+      }
 
-            axios.post('/checkout/confirm',{
-                shipping_id: Window.CartMeta.shipping_id,
-                payment_type: this.meta.isAdmin ? 'admin' : 'card',
-                admin: this.meta.isAdmin ? 'admin' : 'online',
-                pending:false
-            }).then((response) => {
-                if ( response.data == 1 ){
-                    location.href="/thankyou"
-                } 
+      if (this.$root.settings.shipping_is_free == 0 && !this.shipping_price) {
+        this.error = "Please select your shipping method";
+        return false;
+      }
+      this.payment_method = "admin";
 
-            }).catch((error)=>{
-                this.order_text = "Place Order"
-                this.payment_is_processing = false
-                this.checkingout = false
-                this.error = "We could not complete your order .Please send a mail to info@ohram.org"
-            })
-        },
-        updateCartTotal: function(obj){
-            this.updateCartMeta(obj)
-        }
-    }
-}
+      this.order_text = "Please wait. We are almost done......";
+      let form = document.getElementById("checkout-form-2");
+      form.submit();
+    },
+    addShippingPrice: function (evt) {
+      if (evt.target.value == "") {
+        return;
+      }
+      this.error = "";
+      this.shipping_id = evt.target.selectedOptions[0].dataset.id;
+      this.shipping_price = evt.target.value;
+      //check if a voucher was applied
+      if (this.voucher.length) {
+        this.amount =
+          parseInt(evt.target.value) + parseInt(this.voucher[0].sub_total);
+      } else {
+        this.amount =
+          parseInt(evt.target.value) + parseInt(this.meta.sub_total);
+      }
+      let obj = {
+        sub_total: this.meta.sub_total,
+        currency: this.meta.currency,
+        user: this.meta.user,
+        shipping_id: this.shipping_id,
+        isAdmin: this.meta.isAdmin,
+      };
+      Window.CartMeta = obj;
+      this.updateCartTotal(obj);
+    },
+    ...mapActions({
+      getCart: "getCart",
+      applyVoucher: "applyVoucher",
+      updateCartMeta: "updateCartMeta",
+      getAddresses: "getAddresses",
+    }),
+    applyCoupon: function () {
+      if (!this.coupon) {
+        this.coupon_error = "Enter a coupon code";
+        setTimeout(() => {
+          this.error = null;
+        }, 2000);
+        return;
+      }
+      this.coupon_error = null;
+      this.submiting = true;
+      axios
+        .post("/checkout/coupon", {
+          coupon: this.coupon,
+        })
+        .then((response) => {
+          this.submiting = false;
+          this.coupon = "";
+          this.voucher.push(response.data);
+          if (this.shipping_price) {
+            this.amount =
+              parseInt(this.shipping_price) + parseInt(response.data.sub_total);
+          } else {
+            this.amount = parseInt(response.data.sub_total);
+          }
+        })
+        .catch((error) => {
+          this.submiting = false;
+          this.coupon_error = error.response.data.error;
+          if (error.response.status) {
+            this.submiting = false;
+          }
+        });
+    },
+    checkout: function () {
+      this.order_text = "Please wait. We are almost done......";
+      this.checkingout = true;
+      this.coupon_error = null;
+
+      axios
+        .post("/checkout/confirm", {
+          shipping_id: Window.CartMeta.shipping_id,
+          payment_type: this.meta.isAdmin ? "admin" : "card",
+          admin: this.meta.isAdmin ? "admin" : "online",
+          pending: false,
+        })
+        .then((response) => {
+          if (response.data == 1) {
+            location.href = "/thankyou";
+          }
+        })
+        .catch((error) => {
+          this.order_text = "Place Order";
+          this.payment_is_processing = false;
+          this.checkingout = false;
+          this.error =
+            "We could not complete your order .Please send a mail to info@ohram.org";
+        });
+    },
+    updateCartTotal: function (obj) {
+      this.updateCartMeta(obj);
+    },
+  },
+};
 </script>
 <style>
- .fa-20 {
-      font-size: 20px;
-  }
+.fa-20 {
+  font-size: 20px;
+}
 
-  .fa-28 {
-      font-size: 28px;
-  }
+.fa-28 {
+  font-size: 28px;
+}
 
-  /* Position text in the middle of the page/image */
+/* Position text in the middle of the page/image */
 .bg-text {
-  background-color: #36c2ad !important ;/* Black w/opacity/see-through */
+  background-color: #36c2ad !important ; /* Black w/opacity/see-through */
   color: white;
   font-weight: 700;
   font-size: 12px;
