@@ -403,7 +403,7 @@ export default {
                 hash: Sha512.hash(signatureCipher),
                 onComplete : function (paymentResponse){
                     console.log(paymentResponse)
-                    let url = "https://sandbox.interswitchng.com/webpay/api/v1/gettransaction.json?productId="+product_id+"&transactionreference="+reqRef+"&amount="+amount
+                    let url = "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?productId="+product_id+"&transactionreference="+reqRef+"&amount="+amount
                     axios.get(url,{
                         headers: {
                            'Hash': Sha512.hash(signatureCipher)

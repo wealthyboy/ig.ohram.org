@@ -2384,7 +2384,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         hash: Sha512.hash(signatureCipher),
         onComplete: function onComplete(paymentResponse) {
           console.log(paymentResponse);
-          var url = "https://sandbox.interswitchng.com/webpay/api/v1/gettransaction.json?productId=" + product_id + "&transactionreference=" + reqRef + "&amount=" + amount;
+          var url = "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?productId=" + product_id + "&transactionreference=" + reqRef + "&amount=" + amount;
           axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
             headers: {
               'Hash': Sha512.hash(signatureCipher)
