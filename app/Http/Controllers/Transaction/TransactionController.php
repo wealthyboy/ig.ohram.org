@@ -52,51 +52,54 @@ class TransactionController extends Controller
     public function confirm(Request $request)
     {
         
-
+        $prudid = 1076;
+			
         $parameters = array(
             "productid"=>$request->productId,
             "transactionreference"=>$request->reqRef,
             "amount"=>$request->amount
             ); 
-        
-        $ponmo = http_build_query($parameters) . "\n";
-            
-        $url = urlencode("https://sandbox.interswitchng.com/webpay/api/v1/gettransaction.json " . $ponmo); // json
-
-        //note the variables appended to the url as get values for these parameters
-        $headers = array(
-                "GET /HTTP/1.1",
-                "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1",
-                "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 
-                "Accept-Language: en-us,en;q=0.5",
-                "Keep-Alive: 300",      
-                "Connection: keep-alive",
-                "Hash: " . $request->hash 
-                        );
-            
-        $ch = curl_init(); 
-            
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60); 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); 
-        curl_setopt($ch, CURLOPT_POST, false );
-    
-        $data = curl_exec($ch);  //EXECUTE CURL STATEMENT///////////////////////////////
-        $json = null;
-        if (curl_errno($ch)) 
-        { 
-            dd($ch);
-        }
-        else 
-        {  
-            // Show me the result
-            $json = json_decode($data, TRUE);
-            curl_close($ch);    //END CURL SESSION///////////////////////////////
-            dd($json);
-        } 
+			
+			$ponmo = http_build_query($parameters);
+				
+			$url = "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?" . $ponmo; // json
+			$mac    = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
+			$hashv =$prudid . $tranid . $mac;
+			$thash = hash('sha512',$hashv);
+			//note the variables appended to the url as get values for these parameters
+			$headers = array(
+				"GET /HTTP/1.1",
+				"Host: sandbox.interswitchng.com",
+				"User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1",
+				"Accept-Language: en-us,en;q=0.5",
+				"Keep-Alive: 300",
+				"Connection: keep-alive",
+					"Hash: " . $thash 
+							);
+				
+			$ch = curl_init(); 
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 60); 
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); 
+			curl_setopt($ch, CURLOPT_POST, false );
+			
+			
+			$data = curl_exec($ch);  //EXECUTE CURL STATEMENT///////////////////////////////
+			$json = null;
+			if (curl_errno($ch)) 
+			{ 
+				Log::info($ch);
+			}
+			else 
+			{  
+				// Show me the result
+				$json = json_decode($data, TRUE);
+				curl_close($ch);    //END CURL SESSION///////////////////////////////
+			    dd($json);
+			}
 
     }
 
