@@ -61,7 +61,7 @@ class TransactionController extends Controller
         
         $ponmo = http_build_query($parameters) . "\n";
             
-        $url = urlencode("https://sandbox.interswitchng.com/test_paydirect/api/v1/gettransaction.json " . $ponmo); // json
+        $url = urlencode("https://sandbox.interswitchng.com/webpay/api/v1/gettransaction.json " . $ponmo); // json
 
         //note the variables appended to the url as get values for these parameters
         $headers = array(
