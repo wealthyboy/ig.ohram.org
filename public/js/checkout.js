@@ -2246,8 +2246,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 
 
 
@@ -22076,13 +22074,10 @@ var render = function() {
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-md-8 offset-md-2" }, [
                   _c("div", { staticClass: "error-page text-center" }, [
-                    _c("h1"),
+                    _c("h1", [_vm._v("Payment Failed")]),
                     _vm._v(" "),
-                    _c("p", { staticClass: "large" }, [
-                      _vm._v(
-                        _vm._s(_vm.failedStatus) +
-                          "Your order has been received ."
-                      )
+                    _c("p", { staticClass: "large text-danger bold" }, [
+                      _vm._v(_vm._s(_vm.failedStatus.ResponseDescription) + ".")
                     ]),
                     _vm._v(" "),
                     _c("p", { staticClass: "large" }),
@@ -22091,18 +22086,9 @@ var render = function() {
                       "a",
                       {
                         staticClass: "btn btn--primary space-t--2",
-                        attrs: { href: "/" }
+                        attrs: { href: "" }
                       },
-                      [_vm._v("Continue")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass: "btn btn--primary space-t--2",
-                        attrs: { href: "/orders" }
-                      },
-                      [_vm._v("View order history")]
+                      [_vm._v("Retry")]
                     )
                   ])
                 ])
