@@ -425,7 +425,7 @@ export default {
             "&amount=" +
             amount;
           axios
-            .get("/transaction/status", {
+            .post("/transaction/status", {
               productId: product_id,
               reqRef: reqRef,
               amount: amount,

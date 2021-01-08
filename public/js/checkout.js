@@ -2385,7 +2385,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         onComplete: function onComplete(paymentResponse) {
           console.log(paymentResponse);
           var url = "https://sandbox.interswitchng.com/collections/api/v1/gettransaction.json?productId=" + product_id + "&transactionreference=" + reqRef + "&amount=" + amount;
-          axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/transaction/status", {
+          axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/transaction/status", {
             productId: product_id,
             reqRef: reqRef,
             amount: amount,

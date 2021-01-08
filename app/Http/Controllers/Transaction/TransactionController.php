@@ -84,7 +84,6 @@ class TransactionController extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); 
         curl_setopt($ch, CURLOPT_POST, false );
     
-        curl_exec($ch);
         $data = curl_exec($ch);  //EXECUTE CURL STATEMENT///////////////////////////////
         $json = null;
         if (curl_errno($ch)) 
