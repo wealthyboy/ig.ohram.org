@@ -98,7 +98,7 @@ class TransactionController extends Controller
 				// Show me the result
 				$json = json_decode($data, TRUE);
 				curl_close($ch);    //END CURL SESSION///////////////////////////////
-			    return $json;
+			    return response()->json(['status' =>$json]);
 			}
 
     }
