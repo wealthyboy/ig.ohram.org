@@ -2246,6 +2246,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
@@ -22078,6 +22080,14 @@ var render = function() {
                     _vm._v(" "),
                     _c("p", { staticClass: "large text-danger bold" }, [
                       _vm._v(_vm._s(_vm.failedStatus.ResponseDescription) + ".")
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "large text-danger bold" }, [
+                      _vm._v(
+                        "transaction Reference: " +
+                          _vm._s(_vm.failedStatus.MerchantReference) +
+                          "."
+                      )
                     ]),
                     _vm._v(" "),
                     _c("p", { staticClass: "large" }),

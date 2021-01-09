@@ -10,6 +10,8 @@
                             <div class="error-page text-center">
                                 <h1>Payment Failed</h1>
                                 <p class="large text-danger bold">{{ failedStatus.ResponseDescription }}.</p>
+                                <p class="large text-danger bold">transaction Reference: {{ failedStatus.MerchantReference }}.</p>
+
                                 <p class="large"></p>
                                 
                                 <a href="" class="btn btn--primary space-t--2">Try again</a>
