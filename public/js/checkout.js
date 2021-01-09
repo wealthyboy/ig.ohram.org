@@ -22084,7 +22084,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("p", { staticClass: "large text-danger bold" }, [
                       _vm._v(
-                        "transaction Reference: " +
+                        "Transaction Reference: " +
                           _vm._s(_vm.failedStatus.MerchantReference) +
                           "."
                       )
