@@ -71,7 +71,7 @@
 
                                             <td></td>
                                             <td class="td-actions ">                     
-                                                <a href="/admin/requery/{{ $transaction->id }} " rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs">
+                                                <a href="/admin/requery/{{ $transaction->id }} " rel="tooltip" title="Requery" class="btn btn-primary btn-simple btn-xs">
                                                     Requery
                                                 </a>
                                             </td>

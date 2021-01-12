@@ -15,7 +15,6 @@ class AlterTransactonLogsTableAddToken extends Migration
     {
         Schema::table('transaction_logs', function (Blueprint $table) {
             $table->string('token')->nullable();
-
         });
     }
 
