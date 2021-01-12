@@ -28,8 +28,9 @@ Route::group(['middleware' => 'admin','prefix' => 'admin'], function(){
 
     Route::get('orders/dispatch/{id}','Admin\Orders\OrdersController@dispatchNote')->name('order.dispatch.note');
     Route::resource('banners', 'Admin\Design\BannersController',['names' =>'banners']);
-    Route::resource('transactions', 'Admin\Transaction\TransactionController',['names' =>'transactions']);
     Route::get('requery/{id}',  'Admin\Transaction\TransactionController@requery');
+
+    Route::resource('transactions', 'Admin\Transaction\TransactionController',['names' =>'transactions']);
 
 
     Route::get('customers',  'Admin\Users\UsersController@customers')->name('customers');
