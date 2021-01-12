@@ -3,21 +3,7 @@
 
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Artisan;
 
-Route::get('/migrate/achu',function(){
-    try {
-        $migrate =  Artisan::call('migrate');
-        dd( $migrate);
-        if ($migrate == 0 ){
-            echo " migration was successful";
-        }
-    } catch (\Throwable $th) {
-        //throw $th;
-        dd( $th);
-
-    }
-});
 
 
 
@@ -43,6 +29,8 @@ Route::group(['middleware' => 'admin','prefix' => 'admin'], function(){
     Route::get('orders/dispatch/{id}','Admin\Orders\OrdersController@dispatchNote')->name('order.dispatch.note');
     Route::resource('banners', 'Admin\Design\BannersController',['names' =>'banners']);
     Route::resource('transactions', 'Admin\Transaction\TransactionController',['names' =>'transactions']);
+    Route::get('requery/{id}',  'Admin\Transaction\TransactionController@requery');
+
 
     Route::get('customers',  'Admin\Users\UsersController@customers')->name('customers');
     Route::resource('reviews',  'Admin\Reviews\ReviewsController',['names' => 'reviews']);
