@@ -90,7 +90,7 @@ class TransactionController extends Controller
                     $transaction_log->transaction_reference = $json["MerchantReference"];
                     $transaction_log->approved_amount = $json["Amount"] / 100;
                     $transaction_log->response_description = $json["ResponseDescription"];
-                    $transaction_log->status = 'Failed';
+                    $transaction_log->status =  $json['ResponseCode'] == '00' ? 'Successfull' : 'Failed';
                     $transaction_log->save();
                 
 			    return back();
