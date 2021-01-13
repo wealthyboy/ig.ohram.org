@@ -90,6 +90,8 @@ class TransactionController extends Controller
                 $transaction_log->approved_amount = $json["Amount"] / 100;
                 $transaction_log->response_description = $json["ResponseDescription"];
                 $transaction_log->status =  $json['ResponseCode'] == '00' ? 'Successfull' : 'Failed';
+                $transaction_log->response_code =  $json['ResponseCode'];
+                $transaction_log->response_date_time =  $json['TransactionDate'];
                 $transaction_log->save();
                 
 			    return back();
