@@ -43,7 +43,7 @@
                                         <th>Status</th>
                                         <th>Response Code</th>
                                         <th>Response <br/>Date</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th class="text-left">Actions</th>
                                     </tr>
                                 </thead>
                                 
