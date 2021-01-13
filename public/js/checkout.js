@@ -2326,7 +2326,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
     logTransaction: function logTransaction() {
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/log/transaction").then(function (response) {})["catch"](function (error) {});
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/log/transaction", {
+        txref: this.transReference(),
+        productId: 1076,
+        amount: this.amount
+      }).then(function (response) {})["catch"](function (error) {});
     },
     loadScript: function loadScript(callback) {
       var script = document.createElement("script");
@@ -2378,10 +2382,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var amount = this.amount * 100;
       var mac = "D3D1D05AFE42AD50818167EAC73C109168A0F108F32645C8B59E897FA930DA44F9230910DAC9E20641823799A107A02068F7BC0F4CC41D2952E249552255710F";
       var site_redirect_url = "https://ig.ohram.org/checkout/confirm";
-      var a = this.getRandomInt(12345678, 10000000000);
-      var b = "JB-";
-      var c = "-NWEB";
-      var reqRef = b + a + c;
+      var reqRef = this.transReference();
       var shipping_id = this.shipping_id;
       var signatureCipher = reqRef + product_id + pay_item_id + amount + site_redirect_url + mac;
       var iswPay = new IswPay({
@@ -2416,6 +2417,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           }
         }
       });
+    },
+    transReference: function transReference() {
+      var a = this.getRandomInt(12345678, 10000000000);
+      var b = "JB-";
+      var c = "-NWEB";
+      var reqRef = b + a + c;
+      return refRef;
     },
     payAsAdmin: function payAsAdmin() {
       if (!this.addresses.length) {

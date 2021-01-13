@@ -21,7 +21,7 @@ class TransactionController extends Controller
     public function log(Request $request)
     {   
         $transaction_log = new TransactionLog;
-        
+        return $request->all();
         $request->session()->put('user_id', 'value');
         if (\Cookie::get('cart') !== null) {
             $cookie = \Cookie::get('cart');
