@@ -31,6 +31,7 @@ class TransactionController extends Controller
     {
         $prudid = 1076;
         $transaction_log = TransactionLog::find($id);
+        dd($transaction_log);
 
 			
         $parameters = array(
