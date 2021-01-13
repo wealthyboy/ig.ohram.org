@@ -15,7 +15,6 @@ class TransactionController extends Controller
      */
     public function index()
     {   
-        TransactionLog::where('transaction_reference',null)->delete();
         $transactions = TransactionLog::all();
         return view('admin.transaction.index',compact('transactions'));
     }

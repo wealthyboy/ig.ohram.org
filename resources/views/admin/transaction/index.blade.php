@@ -42,7 +42,7 @@
                                         <th>Response Description</th>
                                         <th>Status</th>
                                         <th>Response Code</th>
-                                        <th>Response DateTime</th>
+                                        <th>Response <br/>Date</th>
                                         <th class="disabled-sorting text-right">Actions</th>
                                     </tr>
                                 </thead>
