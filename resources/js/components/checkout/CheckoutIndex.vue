@@ -341,7 +341,6 @@ export default {
       document.getElementById("full-bg").style.display = "none";
       this.pageIsLoading = false;
     });
-    this.logTransaction();
   },
   methods: {
     ...mapActions({
@@ -511,6 +510,7 @@ export default {
       };
       Window.CartMeta = obj;
       this.updateCartTotal(obj);
+      this.logTransaction();
     },
     ...mapActions({
       getCart: "getCart",

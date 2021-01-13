@@ -2317,7 +2317,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       document.getElementById("full-bg").style.display = "none";
       _this.pageIsLoading = false;
     });
-    this.logTransaction();
   },
   methods: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapActions"])({
     getCart: "getCart"
@@ -2464,6 +2463,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       };
       Window.CartMeta = obj;
       this.updateCartTotal(obj);
+      this.logTransaction();
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapActions"])({
     getCart: "getCart",
