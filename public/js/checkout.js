@@ -2422,8 +2422,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var a = this.getRandomInt(12345678, 10000000000);
       var b = "JB-";
       var c = "-NWEB";
-      var reqRef = b + a + c;
-      return refRef;
+      return b + a + c;
     },
     payAsAdmin: function payAsAdmin() {
       if (!this.addresses.length) {
