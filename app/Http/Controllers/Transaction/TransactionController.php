@@ -110,14 +110,13 @@ class TransactionController extends Controller
                         $transaction_log->status =  $json['ResponseCode'] == '00' ? 'Successfull' : 'Failed';
                         $transaction_log->response_code =  $json['ResponseCode'];
                         $transaction_log->response_date_time =  $json['TransactionDate'];
+                        $transaction_log->token = null;
                         $transaction_log->save();
                     }
 
-                    $transaction_log->token = null;
-                    $transaction_log->save();
                 }
 
-			    return response()->json(['status' =>$json]);
+			    return response()->json(['status' =>$json,'tx' => $transaction_log]);
 			}
 
     }

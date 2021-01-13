@@ -34,9 +34,9 @@ class TransactionController extends Controller
 
 			
         $parameters = array(
-            "productid"=>$prudid,
-            "transactionreference"=>$transaction_log->transaction_reference,
-            "amount"=>$transaction_log->approved_amount * 100
+               "productid"=>$prudid,
+               "transactionreference"=>$transaction_log->transaction_reference,
+               "amount"=>$transaction_log->approved_amount * 100
             ); 
 			
 			$ponmo = http_build_query($parameters);
@@ -84,8 +84,6 @@ class TransactionController extends Controller
                 $transaction_log->response_code =  $json['ResponseCode'];
                 $transaction_log->response_date_time =  $json['TransactionDate'];
                 $transaction_log->save();
-                \Cookie::queue(\Cookie::forget('cart'));
-
 			    return back();
 			}
     }
