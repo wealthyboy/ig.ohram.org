@@ -59,14 +59,16 @@
                                             </td>
                                             <!-- cart-active -->
                                             
-                                            <td><a target="_blank" href="#">{{ $transaction->id }}</a></td>
-                                            <td><a target="_blank" href="#">{{ optional($transaction->user)->fullname() }}</a></td>
-                                            <td><a target="_blank" href="#">{{ $transaction->transaction_reference }}</a></td>
-                                            <td><a target="_blank" href="#">{{ $transaction->amount }}</a></td>
-                                            <td><a target="_blank" href="#">{{ $transaction->approved_amount }} </a></td>
-                                            <td><a target="_blank" href="#">{{ $transaction->response_description }} </a></td>
-                                            <td><a target="_blank" href="#">{{ $transaction->status }} </a></td>
-                                            <td><a target="_blank" href="#">{{ $transaction->response_code }} </a></td>
+                                            <td>{{ $transaction->id }}</td>
+                                            <td>{{ optional($transaction->user)->fullname() }}</td>
+                                            <td>{{ $transaction->transaction_reference }}</td>
+                                            <td>{{ $transaction->amount }}</td>
+                                            <td>{{ $transaction->approved_amount }} </td>
+                                            <td>{{ $transaction->response_description }} </td>
+                                            <td>{{ $transaction->status }} </td>
+                                            <td>{{ $transaction->response_code }} </td>
+                                            <td>{{ $transaction->response_date_time }}</td>
+
 
 
                                             <td></td>
