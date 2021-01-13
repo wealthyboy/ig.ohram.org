@@ -40,8 +40,8 @@
                                     <th>Approved Amount</th>
                                     <th>Response Description</th>
                                     <th>Status</th>
-
                                     <th>Response Code</th>
+                                    <th>Response Date/Time</th>
                                     <th class="disabled-sorting text-right">Actions</th>
                                 </tr>
                             </thead>
