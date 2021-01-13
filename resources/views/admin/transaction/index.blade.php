@@ -38,7 +38,6 @@
 
                                         <th>Full Name</th>
                                         <th>Transaction Reference</th>
-                                        <th>Amount</th>
                                         <th>Approved Amount</th>
                                         <th>Response Description</th>
                                         <th>Status</th>
@@ -64,7 +63,6 @@
                                                 <td >{{ $transaction->id }}</td>
                                                 <td>{{ optional($transaction->user)->fullname() }}</td>
                                                 <td class="text-center">{{ $transaction->transaction_reference }}</td>
-                                                <td class="text-center">{{ $transaction->amount }}</td>
                                                 <td class="text-center">{{ $transaction->approved_amount }} </td>
                                                 <td class="text-center">{{ $transaction->response_description }} </td>
                                                 <td class="text-center">{{ $transaction->status }} </td>
