@@ -15,19 +15,12 @@ class TransactionController extends Controller
      */
     public function index()
     {   
+        TransactionLog::where('transaction_reference',null)->delete();
         $transactions = TransactionLog::all();
         return view('admin.transaction.index',compact('transactions'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+   
 
     /**
      * Store a newly created resource in storage.

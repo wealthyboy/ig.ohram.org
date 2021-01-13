@@ -111,7 +111,6 @@ class TransactionController extends Controller
                         $transaction_log->response_code =  $json['ResponseCode'];
                         $transaction_log->response_date_time =  $json['TransactionDate'];
                         $transaction_log->save();
-                        \Cookie::queue(\Cookie::forget('cart'));
                     }
                 }
 			    return response()->json(['status' =>$json]);
