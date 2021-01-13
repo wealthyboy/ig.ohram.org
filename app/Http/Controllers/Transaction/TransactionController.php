@@ -21,7 +21,6 @@ class TransactionController extends Controller
     public function log(Request $request)
     {   
         $transaction_log = new TransactionLog;
-        return $request->all();
         $request->session()->put('user_id', 'value');
         if (\Cookie::get('cart') !== null) {
             $cookie = \Cookie::get('cart');
@@ -32,6 +31,10 @@ class TransactionController extends Controller
                 $tl->status = 'Pending';
                 $tl->user_id = request()->user()->id;
                 $tl->token = $cookie;
+                $tl->approved_amount = $request->amount;
+                $tl->transaction_reference = $request->txref;
+                $tl->product_id = $request->productId;
+
                 $tl->save();
                 return response(null,200);
             }
@@ -39,6 +42,9 @@ class TransactionController extends Controller
             $transaction_log->status = 'Pending';
             $transaction_log->user_id = request()->user()->id;
             $transaction_log->token = $cookie;
+            $transaction_log->approved_amount =  $request->amount;
+            $transaction_log->transaction_reference = $request->txref;
+            $transaction_log->product_id = $request->productId;
             $transaction_log->save();
             return response(null,200);
         
