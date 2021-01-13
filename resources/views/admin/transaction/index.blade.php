@@ -59,15 +59,15 @@
                                             </td>
                                             <!-- cart-active -->
                                             
-                                            <td>{{ $transaction->id }}</td>
+                                            <td >{{ $transaction->id }}</td>
                                             <td>{{ optional($transaction->user)->fullname() }}</td>
-                                            <td>{{ $transaction->transaction_reference }}</td>
-                                            <td>{{ $transaction->amount }}</td>
-                                            <td>{{ $transaction->approved_amount }} </td>
-                                            <td>{{ $transaction->response_description }} </td>
-                                            <td>{{ $transaction->status }} </td>
-                                            <td>{{ $transaction->response_code }} </td>
-                                            <td>{{ $transaction->response_date_time }}</td>
+                                            <td class="text-center">{{ $transaction->transaction_reference }}</td>
+                                            <td class="text-center">{{ $transaction->amount }}</td>
+                                            <td class="text-center">{{ $transaction->approved_amount }} </td>
+                                            <td class="text-center">{{ $transaction->response_description }} </td>
+                                            <td class="text-center">{{ $transaction->status }} </td>
+                                            <td class="text-center">{{ $transaction->response_code }} </td>
+                                            <td class="text-center">{{ $transaction->response_date_time }}</td>
 
 
 
