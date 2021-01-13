@@ -426,7 +426,7 @@ export default {
         transRef: reqRef,
         siteName: "OHRAM COMPANY INTERNATIONAL",
         itemId: pay_item_id,
-        customerId: a,
+        customerId: this.getRandomInt(12345678, 10000000000),
         siteRedirectUrl: site_redirect_url,
         currency: "NGN",
         hash: Sha512.hash(signatureCipher),
