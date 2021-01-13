@@ -36,7 +36,7 @@ class TransactionController extends Controller
         $parameters = array(
                "productid"=>$prudid,
                "transactionreference"=>$transaction_log->transaction_reference,
-               "amount"=>$transaction_log->approved_amount ?  $transaction_log->approved_amount * 100 : $transaction_log->amount *amount,
+               "amount"=>$transaction_log->approved_amount ?  $transaction_log->approved_amount * 100 : $transaction_log->amount *100,
             ); 
 			
 			$ponmo = http_build_query($parameters);
